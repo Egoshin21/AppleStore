@@ -1,0 +1,22 @@
+﻿<Window x:Class="AppleStore.Windows.TovSale"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AppleStore.Windows"
+        mc:Ignorable="d"
+         Title="Список продаж" FontFamily="Montserrat"  Height="600" Width="1050" Icon="/Windows/Logo.png">
+    <Grid>
+        <Grid ShowGridLines="True">
+            <DataGrid Grid.Row="1" Grid.Column="1" x:Name="DataGrid1" Margin="10" Width="1000" Visibility="Visible"  AutoGenerateColumns="False" ItemsSource="{Binding SalesList}" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Наименование товара" Binding="{Binding Titl}"/>
+                    <DataGridTextColumn Header="Колличество" Binding="{Binding Quantit}" />
+                    <DataGridTextColumn Header="Дата" Binding="{Binding DataSale,StringFormat=\{0:dd.MM.yy HH:mm:ss\}}"/>
+                    <DataGridTextColumn Header="Покупатель" Binding="{Binding Clients}"/>
+                    <DataGridTextColumn Header="Продавец" Binding="{Binding name}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>

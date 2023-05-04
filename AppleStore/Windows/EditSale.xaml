@@ -1,0 +1,30 @@
+﻿<Window x:Class="AppleStore.Windows.EditSale"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AppleStore.Windows"
+        mc:Ignorable="d"
+        Title="Добавить в корзину" FontFamily="Montserrat"  Height="300" Width="500" Icon="/Windows/Logo.png">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel
+            Height="180"
+            VerticalAlignment="Top"
+            Grid.Column="1" 
+            Margin="10">
+            <Label Content="Наименование товара" FontFamily="Montserrat" FontSize="13"/>
+            <TextBox Text="{Binding CurrentTovar.Title}" Height="30" FontFamily="Montserrat" FontSize="13" />
+            <Label  Height="25"/>
+            <Label Content="Колличество" FontFamily="Montserrat" FontSize="13"/>
+            <TextBox Text="{Binding CurrentSale.Quantity}" Height="30" FontFamily="Montserrat" FontSize="13" />
+        </StackPanel>
+        <StackPanel Grid.Column="1"  VerticalAlignment="Top" Grid.ColumnSpan="2" Margin="0,170,0,0">
+            <Button x:Name="edbtn" Content="Добавить в корзину" FontFamily="Montserrat" FontSize="13" Click="edbtn_Click" Height="40" Width="200" Margin="20" Background="#FFCCCCCC" BorderBrush="Gray" Foreground="#DD000000" />
+        </StackPanel>
+    </Grid>
+</Window>

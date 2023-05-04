@@ -41,15 +41,13 @@ namespace AppleStore.Models
 
             modelBuilder.Entity<Chek>(entity =>
             {
-                entity.HasKey(e => new { e.IdChek, e.TovarsIdTovars, e.UsersIdUser })
+                entity.HasKey(e => new { e.IdChek, e.TovarsIdTovars })
                     .HasName("PRIMARY")
-                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
+                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
                 entity.ToTable("Chek");
 
                 entity.HasIndex(e => e.TovarsIdTovars, "fk_Chek_Tovars1_idx");
-
-                entity.HasIndex(e => e.UsersIdUser, "fk_Chek_Users1_idx");
 
                 entity.Property(e => e.IdChek)
                     .ValueGeneratedOnAdd()
@@ -57,19 +55,11 @@ namespace AppleStore.Models
 
                 entity.Property(e => e.TovarsIdTovars).HasColumnName("Tovars_idTovars");
 
-                entity.Property(e => e.UsersIdUser).HasColumnName("Users_idUser");
-
                 entity.HasOne(d => d.TovarsIdTovarsNavigation)
                     .WithMany(p => p.Cheks)
                     .HasForeignKey(d => d.TovarsIdTovars)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Chek_Tovars1");
-
-                entity.HasOne(d => d.UsersIdUserNavigation)
-                    .WithMany(p => p.Cheks)
-                    .HasForeignKey(d => d.UsersIdUser)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_Chek_Users1");
             });
 
             modelBuilder.Entity<Client>(entity =>

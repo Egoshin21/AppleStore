@@ -11,14 +11,30 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="Auto" Height="500" Width="400">
+        Title="Авторизация"  Height="600" Width="450" Icon="/Windows/Logo.png" >
     <Grid>
+        <Image 
+            Source="/Windows/Logo.png" 
+            Height="80"
+            Width="80"
+            Margin="0,100,0,0"
+            VerticalAlignment="Top"/>
+        <Label
+            Content="AppleStore"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontFamily="Montserrat Black"
+            FontSize="22"
+            Margin="0,0,0,170"
+            Foreground="#DD525252"/>
         <StackPanel
             Height="55"
             Margin="0,40,0,0">
             <TextBox
+                FontFamily="Montserrat"
+                x:Name="login"
                 Height="50"
-                Width="220"
+                Width="250"
                 VerticalAlignment="Top"
                 materialDesign:HintAssist.Hint="Логин"
                 Style="{StaticResource MaterialDesignOutlinedTextBox}" BorderBrush="Gray" SelectionBrush="#FFBBBBBB" CaretBrush="DarkGray" Background="#00000000"/>
@@ -27,12 +43,44 @@
             Height="55"
             Margin="0,160,0,0">
             <PasswordBox
+                FontFamily="Montserrat"
+                x:Name="password"
                 Height="50"
-                Width="220"
+                Width="250"
                 materialDesign:HintAssist.Hint="Пароль" 
                 materialDesign:TextFieldAssist.HasClearButton="True"
                 IsEnabled="{Binding IsChecked, ElementName=RevealPasswordOutlinedEnabled}"
                 Style="{StaticResource MaterialDesignOutlinedRevealPasswordBox}" BorderBrush="Gray" Background="#00000000" Password="" CaretBrush="DarkGray" SelectionBrush="#FFBBBBBB" />
         </StackPanel>
+        <Button
+            x:Name="Entbtn"
+            Click="Entbtn_Click"
+            Content="Войти"
+            Height="40"
+            Width="190"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom" 
+            Margin="0,0,0,100"
+            Background="#FFCCCCCC"
+            BorderBrush="Gray"
+            FontFamily="Montserrat" 
+            FontSize="17"
+            Cursor="Hand"
+            Foreground="#DD000000"/>
+        <Button 
+            x:Name="Regbtn"
+            Click="Regbtn_Click"
+            Content="Зарегистрироваться"
+            Height="40"
+            Width="190"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Margin="0,0,0,50"
+            Background="#FFCCCCCC"
+            BorderBrush="Gray"
+            FontFamily="Montserrat" 
+            FontSize="13"
+            Cursor="Hand"
+            Foreground="#DD000000"/>
     </Grid>
 </Window>

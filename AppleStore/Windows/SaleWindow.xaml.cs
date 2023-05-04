@@ -1,5 +1,4 @@
 ﻿using AppleStore.Models;
-using AppleStore.Windows;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,37 +13,23 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AppleStore
+namespace AppleStore.Windows
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Логика взаимодействия для SaleWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class SaleWindow : Window, INotifyPropertyChanged
     {
+        public int Id { get; }
+        public string Login { get; }
 
+
+        private IEnumerable<Tovar> _TovarList;
         public List<TovarType> TovarTypeList { get; set; }
         public List<Manufacture> ManufactureList { get; set; }
-
-        public MainWindow()
-        {
-            InitializeComponent();
-            DataContext = this;
-            using (var context = new aegoshinContext())
-            {
-                TovarList = context.Tovars
-                    .Include(t => t.TovarTypeIdTovarTypeNavigation)
-                    .Include(m => m.ManufactureIdManufactureNavigation)
-                    .ToList();
-                TovarTypeList = context.TovarTypes.ToList();
-                TovarTypeList.Insert(0, new TovarType { Title = "Все типы товаров" });
-                ManufactureList = context.Manufactures.ToList();
-                ManufactureList.Insert(0, new Manufacture { Title = "Все поставщики" });
-            }
-        }
-        private IEnumerable<Tovar> _TovarList;
+        public IEnumerable<Chek> ChekList { get; set; }
         public IEnumerable<Client> ClientList { get; set; }
         public IEnumerable<Tovar> TovarList
         {
@@ -87,9 +72,39 @@ namespace AppleStore
                 Invalidate();
             }
         }
+        public SaleWindow(int id, string name)
+        {
+            InitializeComponent();
+            DataContext = this;
+
+            using (var context = new aegoshinContext())
+            {
+                ClientList = context.Clients.ToList();
+                ChekList = context.Cheks.ToList();
+                TovarList = context.Tovars.ToList();
+                TovarTypeList = context.TovarTypes.ToList();
+                TovarTypeList.Insert(0, new TovarType { Title = "Все типы товаров" });
+                ManufactureList = context.Manufactures.ToList();
+                ManufactureList.Insert(0, new Manufacture { Title = "Все поставщики" });
+            }
+
+            Id = id;
+            Login = name;
+            Name.Content = Login;
+
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private void Invalidate(string ComponentName = "TovarList")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(
+                    this,
+                    new PropertyChangedEventArgs(ComponentName));
+        }
+
+        private void Invalidate1(string ComponentName = "ChekList")
         {
             if (PropertyChanged != null)
                 PropertyChanged(
@@ -103,6 +118,8 @@ namespace AppleStore
             SearchFilter = SearchFilterTextBox.Text;
             Invalidate();
         }
+
+
 
         public string[] SortList { get; set; } = {
             "Без сортировки",
@@ -118,6 +135,7 @@ namespace AppleStore
             Invalidate();
         }
 
+
         private int TovarTypeFilterId = 0;
         private void TovarTypeFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -125,69 +143,73 @@ namespace AppleStore
             Invalidate();
         }
 
+
         private int ManufactureFilterId = 0;
+
+
         private void ManufactureFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ManufactureFilterId = (ManufactureFilter.SelectedItem as Manufacture).IdManufacture;
             Invalidate();
         }
 
-        private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void listv_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var NewEditWindow = new EditTovarWindow(ListView.SelectedItem as Tovar);
-            if ((bool)NewEditWindow.ShowDialog())
+            var EditWindow = new Windows.EditSale(listv.SelectedItem as Tovar);
+            if ((bool)EditWindow.ShowDialog())
             {
-                // при успешном сохранении продукта перечитываем список продукции
                 using (var context = new aegoshinContext())
                 {
-                    TovarList = context.Tovars
-                        .ToList();
-                    Invalidate();
-                }
-            }
-        }
+                    ChekList = context.Cheks.ToList();
+                    Invalidate1();
 
-        private void AddTov_Click(object sender, RoutedEventArgs e)
-        {
-            var NewEditwindow = new EditTovarWindow(new Tovar());
-            if ((bool)NewEditwindow.ShowDialog())
-            {
-                using (var context = new aegoshinContext())
-                {
                     TovarList = context.Tovars.ToList();
                     Invalidate();
+
                 }
             }
-
         }
 
-        private void AddClient_Click(object sender, RoutedEventArgs e)
+
+        private int ClientFilterId = 0;
+        private void cln_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var NewEditWindow = new EditClient(new Client());
-            if ((bool)NewEditWindow?.ShowDialog())
+            ClientFilterId = (cln.SelectedItem as Client).IdClients;
+        }
+
+        private void btnpay_Click(object sender, RoutedEventArgs e)
+        {
+            using (var context = new aegoshinContext())
             {
-                using (var context = new aegoshinContext())
+                try
                 {
-                    ClientList = context.Clients.ToList();
+                    TovarSale tovarSale = null;
+                    tovarSale = new TovarSale();
+                    tovarSale.UsersIdUser = Id;
+                    tovarSale.ClientsIdClients = ClientFilterId;
+                    int AddSale = context.Database.ExecuteSqlInterpolated(
+                    $"INSERT INTO `aegoshin`.`TovarSale` (`Tovars_idTovars`, `DateSale`,`Quantity`,`Clients_idClients`,`Users_IdUser`) SELECT `Chek`.`Tovars_idTovars`,  now(),  `Chek`.`Quantity`,  ({tovarSale.ClientsIdClients}), ({Id})  FROM `aegoshin`.`Chek`; DELETE FROM `aegoshin`.`Chek`;");
+                    context.TovarSales.Add(tovarSale);
+                    MessageBox.Show("Покупка оплачена!");
+                    ChekList = context.Cheks.ToList();
+                    Invalidate1();
+
+                    TovarList = context.Tovars.ToList();
                     Invalidate();
+                    context.SaveChanges();
+
+
+                }
+                catch (Exception ex)
+                {
+                    //MessageBox.Show(ex.Message);
                 }
             }
         }
-        private void ClList_Click(object sender, RoutedEventArgs e)
-        {
-            var auto = new ClList();
-            auto.Show();
-        }
 
-        private void SaleList_Click(object sender, RoutedEventArgs e)
+        private void clear_Click(object sender, RoutedEventArgs e)
         {
-            var auto = new TovSale();
-            auto.Show();
-        }
 
-        private void ex_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
         }
     }
 }

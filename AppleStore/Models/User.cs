@@ -7,7 +7,6 @@ namespace AppleStore.Models
     {
         public User()
         {
-            Cheks = new HashSet<Chek>();
             TovarSales = new HashSet<TovarSale>();
         }
 

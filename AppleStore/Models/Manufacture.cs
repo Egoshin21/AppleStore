@@ -13,6 +13,7 @@ namespace AppleStore.Models
         public int IdManufacture { get; set; }
         public string Title { get; set; } = null!;
 
+
         public virtual ICollection<Tovar> Tovars { get; set; }
     }
 }

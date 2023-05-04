@@ -11,7 +11,7 @@ namespace AppleStore.Models
         }
 
         public int IdTovarType { get; set; }
-        public string Title { get; set; } = null!;
+        public string Title { get; set; } = null!;   
 
         public virtual ICollection<Tovar> Tovars { get; set; }
     }

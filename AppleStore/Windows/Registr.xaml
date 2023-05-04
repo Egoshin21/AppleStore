@@ -1,0 +1,39 @@
+﻿<Window x:Class="AppleStore.Windows.Registr"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AppleStore.Windows"
+        mc:Ignorable="d"
+        Title="Регистрация" FontFamily="Montserrat"  Height="650" Width="550" Icon="/Windows/Logo.png">
+    <Grid>
+        <Label Content="Регистрация" FontSize="33" FontFamily="Montserrat Black" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="30"/>
+        <StackPanel 
+            Grid.Column="1"
+            Margin="30"
+            Height="380"
+            VerticalAlignment="Center">
+            <Label Content="Введите логин" FontFamily="Montserrat" FontSize="13" Margin="10"/>
+            <TextBox Text="{Binding AddUser.User1}" x:Name="logbox" Height="30" Margin="10,0,0,0"/>
+            <Label Content="Введите пароль" FontFamily="Montserrat" FontSize="13" Margin="10,20,0,0"/>
+            <TextBox Text="{Binding AddUser.Password}" x:Name="passbox" Height="30" Margin="10,0,0,0"/>
+            <Label Content="Повторите пароль" FontFamily="Montserrat" FontSize="13" Margin="10,20,0,0"/>
+            <TextBox Text="{Binding AddUser.Password}" x:Name="passbox2" Height="30" Margin="10,0,0,0"/>
+            <Label Content="Имя" FontFamily="Montserrat" FontSize="13" Margin="10,20,0,0"/>
+            <TextBox Text="{Binding AddUser.Login}" x:Name="login" Height="30" Margin="10,0,0,0"/>
+            <Label Content="Роль" FontFamily="Montserrat" FontSize="13" Margin="10,20,0,0"/>
+            <ComboBox
+                x:Name="role"
+                IsEditable="True"
+                ItemsSource="{Binding RoleList}"
+                SelectedValue="{Binding AddUser.RoleIdRoleNavigation}"
+                Text="{Binding AddUser.RoleIdRoleNavigation.Role1}"
+                SelectedItem="{Binding AddUser.RoleIdRoleNavigation.Role1}"
+                Height="30"
+                Margin="10,0,5,0"
+                FontSize="13"
+                FontFamily="Montserrat"/>
+        </StackPanel>
+        <Button x:Name="savereg" Content="Сохранить" Click="savereg_Click" FontSize="17"  Height="50" Width="200" Background="#FFCCCCCC" BorderBrush="Gray" FontFamily="Montserrat" Cursor="Hand" Foreground="#DD000000" VerticalAlignment="Bottom" Margin="20"/>
+    </Grid>
+</Window>
