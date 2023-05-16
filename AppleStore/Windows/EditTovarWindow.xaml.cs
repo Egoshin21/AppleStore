@@ -57,7 +57,6 @@ namespace AppleStore.Windows
                     new PropertyChangedEventArgs(ComponentName));
         }
 
-
         private void PhotoBtn_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog GetImageDialog = new OpenFileDialog();

@@ -17,7 +17,6 @@ namespace AppleStore.Models
         public int RoleIdRole { get; set; }
 
         public virtual Role RoleIdRoleNavigation { get; set; } = null!;
-        public virtual ICollection<Chek> Cheks { get; set; }
         public virtual ICollection<TovarSale> TovarSales { get; set; }
     }
 }

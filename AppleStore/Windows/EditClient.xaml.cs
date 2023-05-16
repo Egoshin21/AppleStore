@@ -30,7 +30,6 @@ namespace AppleStore.Windows
             using (var context = new aegoshinContext()) ;
         }
 
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -78,5 +77,4 @@ namespace AppleStore.Windows
             this.Close();
         }
     }
-
 }

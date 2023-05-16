@@ -30,10 +30,6 @@ namespace AppleStore.Windows
             DataContext = this;
             CurrentTovar = tov;
             CurrentSale = new Chek();
-            using (var context = new aegoshinContext())
-            {
-            }
-
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -51,17 +47,17 @@ namespace AppleStore.Windows
             {
                 try
                 {
+                    if (CurrentSale.Quantity < 1)
+                    { MessageBox.Show("Выберите количество товара"); return; }
+
                     Chek chek = null;
 
                     chek = new Chek();
 
                     if (chek != null)
                     {
-                        // сюда добавлять проверки
-
                         chek.Quantity = CurrentSale.Quantity;
                         chek.TovarsIdTovars = CurrentTovar.IdTovars;
-
 
                         if (chek.IdChek == 0)
                             context.Cheks.Add(chek);
@@ -76,7 +72,6 @@ namespace AppleStore.Windows
                 }
                 catch (Exception ex)
                 {
-
                     if (ex.InnerException != null)
                         MessageBox.Show(ex.InnerException.Message);
                     else

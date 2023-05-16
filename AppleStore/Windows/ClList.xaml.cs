@@ -31,7 +31,6 @@ namespace AppleStore.Windows
             {
                 ClientList = context.Clients.ToList();
             }
-
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

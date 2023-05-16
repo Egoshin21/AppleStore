@@ -37,7 +37,6 @@ namespace AppleStore.Windows
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-
         private void Invalidate(string ComponentName = "RoleList")
         {
             if (PropertyChanged != null)
@@ -84,8 +83,6 @@ namespace AppleStore.Windows
                         MessageBox.Show(ex.Message);
                 }
             }
-
         }
     }
-
 }

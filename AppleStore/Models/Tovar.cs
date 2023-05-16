@@ -11,6 +11,7 @@ namespace AppleStore.Models
             TovarSales = new HashSet<TovarSale>();
         }
 
+
         public int IdTovars { get; set; }
         public string Title { get; set; } = null!;
         public decimal Price { get; set; }
@@ -25,4 +26,5 @@ namespace AppleStore.Models
         public virtual ICollection<Chek> Cheks { get; set; }
         public virtual ICollection<TovarSale> TovarSales { get; set; }
     }
+
 }

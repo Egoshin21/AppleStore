@@ -87,8 +87,8 @@ namespace AppleStore
                 Invalidate();
             }
         }
-        public event PropertyChangedEventHandler? PropertyChanged;
 
+        public event PropertyChangedEventHandler? PropertyChanged;
         private void Invalidate(string ComponentName = "TovarList")
         {
             if (PropertyChanged != null)
@@ -104,12 +104,14 @@ namespace AppleStore
             Invalidate();
         }
 
-        public string[] SortList { get; set; } = {
+        public string[] SortList { get; set; } = 
+        {
             "Без сортировки",
             "название по убыванию",
             "название по возрастанию",
             "цена по убыванию",
-            "цена по возрастанию" };
+            "цена по возрастанию" 
+        };
 
         private int SortType = 0;
         private void SortTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -141,6 +143,8 @@ namespace AppleStore
                 using (var context = new aegoshinContext())
                 {
                     TovarList = context.Tovars
+                        .Include(t => t.TovarTypeIdTovarTypeNavigation)
+                        .Include(m => m.ManufactureIdManufactureNavigation)
                         .ToList();
                     Invalidate();
                 }
@@ -158,7 +162,6 @@ namespace AppleStore
                     Invalidate();
                 }
             }
-
         }
 
         private void AddClient_Click(object sender, RoutedEventArgs e)
@@ -173,6 +176,7 @@ namespace AppleStore
                 }
             }
         }
+
         private void ClList_Click(object sender, RoutedEventArgs e)
         {
             var auto = new ClList();

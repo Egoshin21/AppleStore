@@ -1,4 +1,6 @@
-﻿using AppleStore.Models;
+﻿
+using AppleStore.Models;
+using MaterialDesignThemes.Wpf;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace AppleStore.Windows
 {
@@ -24,6 +27,8 @@ namespace AppleStore.Windows
     {
         public int Id { get; }
         public string Login { get; }
+
+        public decimal TotalSum;
 
 
         private IEnumerable<Tovar> _TovarList;
@@ -76,9 +81,20 @@ namespace AppleStore.Windows
         {
             InitializeComponent();
             DataContext = this;
+            using (var context = new aegoshinContext())
+            {
+                ChekList = context.Cheks.Include(tovar => tovar.TovarsIdTovarsNavigation)
+                    .ToList();
+            }
+
+            decimal totalSum = ChekList.Sum(c => c.Quantity * c.TovarsIdTovarsNavigation.Price);
+            Itogo.Content = totalSum.ToString();
+
+            TotalSum = totalSum;
 
             using (var context = new aegoshinContext())
             {
+
                 ClientList = context.Clients.ToList();
                 ChekList = context.Cheks.ToList();
                 TovarList = context.Tovars.ToList();
@@ -94,8 +110,8 @@ namespace AppleStore.Windows
 
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
 
+        public event PropertyChangedEventHandler? PropertyChanged;
         private void Invalidate(string ComponentName = "TovarList")
         {
             if (PropertyChanged != null)
@@ -112,6 +128,14 @@ namespace AppleStore.Windows
                     new PropertyChangedEventArgs(ComponentName));
         }
 
+        private void Invalidate2(string ComponentName = "TotalSum")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(
+                    this,
+                    new PropertyChangedEventArgs(ComponentName));
+        }
+
         private string SearchFilter = "";
         private void SearchFilterTextBox_KeyUp(object sender, KeyEventArgs e)
         {
@@ -120,13 +144,14 @@ namespace AppleStore.Windows
         }
 
 
-
-        public string[] SortList { get; set; } = {
+        public string[] SortList { get; set; } = 
+        {
             "Без сортировки",
             "название по убыванию",
             "название по возрастанию",
             "цена по убыванию",
-            "цена по возрастанию" };
+            "цена по возрастанию"
+        };
 
         private int SortType = 0;
         private void SortTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -145,8 +170,6 @@ namespace AppleStore.Windows
 
 
         private int ManufactureFilterId = 0;
-
-
         private void ManufactureFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ManufactureFilterId = (ManufactureFilter.SelectedItem as Manufacture).IdManufacture;
@@ -166,6 +189,10 @@ namespace AppleStore.Windows
                     TovarList = context.Tovars.ToList();
                     Invalidate();
 
+                    decimal totalSum = ChekList.Sum(c => c.Quantity * c.TovarsIdTovarsNavigation.Price);
+                    Itogo.Content = totalSum.ToString();
+                    TotalSum = totalSum;
+                    Invalidate2();
                 }
             }
         }
@@ -196,8 +223,14 @@ namespace AppleStore.Windows
 
                     TovarList = context.Tovars.ToList();
                     Invalidate();
-                    context.SaveChanges();
 
+                    ChekList = context.Cheks.Include(tovar => tovar.TovarsIdTovarsNavigation)
+                        .ToList();
+                    decimal totalSum = ChekList.Sum(c => c.Quantity * c.TovarsIdTovarsNavigation.Price);
+                    Itogo.Content = totalSum.ToString();
+                    TotalSum = totalSum;
+                    Invalidate2();
+                    context.SaveChanges();
 
                 }
                 catch (Exception ex)
@@ -207,9 +240,31 @@ namespace AppleStore.Windows
             }
         }
 
-        private void clear_Click(object sender, RoutedEventArgs e)
+        private void DelTov_Click(object sender, RoutedEventArgs e)
         {
+            var selectedTovar = (sender as Button).Tag as Chek;
+            // Ищем чек, в котором находится этот товар
+            using (var context = new aegoshinContext())
+            {
+                var chek = context.Cheks.FirstOrDefault(c => c.IdChek == selectedTovar.IdChek);
+                if (chek != null)
+                {  //Удаление товара из чека
+                    context.Cheks.Remove(chek);
+                    context.SaveChanges();
+                    ChekList = context.Cheks.ToList();
+                    Invalidate1();
 
+                    TovarList = context.Tovars.ToList();
+                    Invalidate();
+
+                    decimal totalSum = ChekList.Sum(c => c.Quantity * c.TovarsIdTovarsNavigation.Price);
+                    Itogo.Content = totalSum.ToString();
+
+                    TotalSum = totalSum;
+                    Invalidate2();
+                }
+            }
         }
     }
 }
+
